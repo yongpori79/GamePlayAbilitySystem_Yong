@@ -12,3 +12,11 @@ void AAuraEnemy::BeginPlay()
 	Super::BeginPlay();
 	
 }
+
+void AAuraEnemy::HighLightActor()
+{
+}
+
+void AAuraEnemy::UnHighLightActor()
+{
+}
