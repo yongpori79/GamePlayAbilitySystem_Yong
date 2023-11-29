@@ -15,8 +15,8 @@ class AURA_API AAuraEnemy : public AAuraCharacterBase, public IEnemyInterface
 {
 	GENERATED_BODY()
 public:
-	AAuraEnemy();
-
+	AAuraEnemy();	
+	virtual void Tick(float DeltaSeconds) override;
 protected:
 	virtual void BeginPlay() override;
 	virtual void HighLightActor() override;

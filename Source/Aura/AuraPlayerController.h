@@ -7,6 +7,7 @@
 #include "AuraPlayerController.generated.h"
 
 
+class IEnemyInterface;
 struct FInputActionValue;
 class UInputAction;
 class UInputMappingContext;
@@ -19,9 +20,15 @@ class AURA_API AAuraPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 public:
+	IEnemyInterface* LastActor;
+	IEnemyInterface* ThisActor;
+	
+	
 	AAuraPlayerController();
 	virtual void BeginPlay() override;
+	virtual void PlayerTick(float DeltaTime) override;
 	virtual void SetupInputComponent() override;
+	void TraceCursor();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UInputMappingContext> AuraContext;

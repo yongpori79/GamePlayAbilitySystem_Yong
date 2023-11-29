@@ -2,12 +2,15 @@
 
 
 #include "AuraPlayerController.h"
+
+#include "EnemyInterface.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 
 AAuraPlayerController::AAuraPlayerController()
 {
 	bReplicates = true;
+	
 }
 
 void AAuraPlayerController::BeginPlay()
@@ -29,12 +32,58 @@ void AAuraPlayerController::BeginPlay()
 	SetInputMode(InputModeData);
 }
 
+void AAuraPlayerController::PlayerTick(float DeltaTime)
+{
+	Super::PlayerTick(DeltaTime);
+	TraceCursor();
+}
+
 void AAuraPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 	UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent);
 	check(EnhancedInputComponent);
 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAuraPlayerController::Move);
+}
+
+void AAuraPlayerController::TraceCursor()
+{
+	FHitResult HitRes;
+	GetHitResultUnderCursor(ECC_Visibility, false, HitRes);
+	LastActor = ThisActor;
+	ThisActor = Cast<IEnemyInterface>(HitRes.GetActor());
+
+	if(LastActor==nullptr)
+	{
+		if(ThisActor)
+		{
+			ThisActor->HighLightActor();
+		}
+		else
+		{
+			//Do Nothing
+		}
+	}
+	else
+	{
+		if(ThisActor==nullptr)
+		{
+			LastActor->UnHighLightActor();
+			
+		}
+		else
+		{
+			if(LastActor!=ThisActor)
+			{
+				LastActor->UnHighLightActor();
+				ThisActor->HighLightActor();
+			}
+			else
+			{
+				//Do Nothing
+			}
+		}
+	}
 }
 
 void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
